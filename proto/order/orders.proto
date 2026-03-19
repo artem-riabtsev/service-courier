@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package orders.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "service-courier/proto/order";
+
+message Item {
+  string name = 1;
+  int64 price = 2;
+  int64 quantity = 3;
+}
+
+message DeliveryAddress {
+  string street = 1;
+  string house = 2;
+  string apartment = 3;
+  string floor = 4;
+  string comment = 5;
+}
+
+message Order {
+  string id = 1;
+  string user_id = 2;
+  string order_number = 3;
+  string fio = 4;
+  string restaurant_id = 5;
+  repeated Item items = 6;
+  int64 total_price = 7;
+  DeliveryAddress address = 8;
+  string status = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+  google.protobuf.Timestamp estimated_delivery = 12;
+}
+
+message GetOrdersRequest {
+  google.protobuf.Timestamp from = 1;
+}
+
+message GetOrderByIdRequest {
+  string id = 1;
+}
+
+message GetOrdersResponse {
+  repeated Order orders = 1;
+}
+
+message GetOrderByIdResponse {
+  Order order = 1;
+  string status = 2;
+}
+
+service OrdersService {
+  rpc GetOrders(GetOrdersRequest) returns (GetOrdersResponse);
+  rpc GetOrderById(GetOrderByIdRequest) returns (GetOrderByIdResponse);
+}
